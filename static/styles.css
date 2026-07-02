@@ -78,12 +78,7 @@ main{max-width:1360px;margin:0 auto;padding:22px}
 .cnode.in .nbox{stroke:#2a4a6a}
 .cnode.agent .nbox{stroke:#3a3360}
 .cnode.orch .nbox{stroke:#1f5a52}
-.cnode.gov .nbox{stroke:#1f4d33;fill:#0f2418}
-.cnode.gov.active .nbox{filter:drop-shadow(0 0 6px rgba(255,204,77,.55));stroke:var(--yellow)}
-.cnode.gov .nval{fill:var(--green);font-weight:800}
-.cnode.gov .gauge-bg{fill:var(--line);stroke:none}
-.cnode.gov .gauge-fg{stroke:none;transition:width .3s}
-.gov-pkt{fill:var(--green);opacity:.9}
+.cnode.pipeline.active .nbox{filter:drop-shadow(0 0 8px rgba(255,204,77,.6));stroke:var(--yellow)}
 .cnode.alert .nbox{stroke-width:2}
 .cnode.active .nbox{filter:drop-shadow(0 0 6px rgba(91,157,255,.55))}
 .edge{fill:none;stroke:#33425e;stroke-width:1.6}

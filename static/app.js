@@ -134,11 +134,10 @@ function buildCouncilSVG() {
     { key: "predictor", y: 238 },
     { key: "narrative", y: 342 },
   ];
-  const AG_X = 470, AG_W = 196, AG_H = 92;
-  const FS = { x: 270, y: 170, w: 160, h: 120, cx: 350, cy: 230 };
-  const GOV = { x: 196, y: 190, w: 62, h: 80, cx: 227, cy: 230 };
-  const ORC = { x: 738, y: 160, w: 152, h: 140, cx: 814, cy: 230 };
-  const ALT = { x: 928, y: 170, w: 100, h: 120, cx: 978, cy: 230 };
+  const AG_X = 486, AG_W = 196, AG_H = 92;
+  const PIPE = { x: 196, y: 156, w: 270, h: 160, cx: 331, cy: 236 };
+  const ORC = { x: 754, y: 160, w: 152, h: 140, cx: 830, cy: 230 };
+  const ALT = { x: 944, y: 170, w: 100, h: 120, cx: 994, cy: 230 };
 
   const path = (x1, y1, x2, y2, bend = 0) =>
     `M${x1},${y1} C${x1 + bend},${y1} ${x2 - bend},${y2} ${x2},${y2}`;
@@ -152,8 +151,7 @@ function buildCouncilSVG() {
     </defs>
     <!-- column captions -->
     <text x="102" y="36" class="col-cap">DEVICE SOURCES</text>
-    <text x="227" y="150" class="col-cap" text-anchor="middle">GOVERNANCE</text>
-    <text x="350" y="150" class="col-cap" text-anchor="middle">FEATURE STORE</text>
+    <text x="319" y="150" class="col-cap" text-anchor="middle">DATA PIPELINE</text>
     <text x="568" y="18" class="col-cap" text-anchor="middle">SPECIALIST AGENTS</text>
     <text x="814" y="150" class="col-cap" text-anchor="middle">ORCHESTRATOR</text>
     <text x="978" y="158" class="col-cap" text-anchor="middle">ALERT</text>
@@ -165,28 +163,32 @@ function buildCouncilSVG() {
       <rect class="nbox" x="${d.x}" y="${d.y}" width="${d.w}" height="${d.h}" rx="12"/>
       <text class="ntitle" x="${d.x + 12}" y="${d.y + 25}">${d.title}</text>
       <text class="nsub" x="${d.x + 12}" y="${d.y + 43}">${d.sub}</text>
-      <text class="nval" id="${d.id}_v" x="${d.x + 12}" y="${d.y + 58}" style="font-size:10px;fill:#8a98ad">—</text>
+      <text class="nval" id="${d.id}_v" x="${d.x + 8}" y="${d.y + 58}" style="font-size:9px;fill:#8a98ad">—</text>
     </g>`;
   });
 
-  // governance node (trust gate)
-  html += `<g class="cnode gov" id="node_gov">
-    <rect class="nbox" x="${GOV.x}" y="${GOV.y}" width="${GOV.w}" height="${GOV.h}" rx="10"/>
-    <text class="ntitle" x="${GOV.x + 8}" y="${GOV.y + 20}" style="font-size:11px">TRUST GATE</text>
-    <text class="nsub" id="gov_grade" x="${GOV.x + 8}" y="${GOV.y + 36}" style="font-size:9.5px">—</text>
-    <text class="nval" id="gov_conf" x="${GOV.x + 8}" y="${GOV.y + 58}" style="font-size:14px">—</text>
-    <rect class="gauge-bg" x="${GOV.x + 8}" y="${GOV.y + 66}" width="${GOV.w - 16}" height="5" rx="2.5"/>
-    <rect class="gauge-fg" id="gov_gauge" x="${GOV.x + 8}" y="${GOV.y + 66}" width="0" height="5" rx="2.5" fill="var(--green)"/>
-  </g>`;
-
-  // feature store node
-  html += `<g class="cnode" id="node_fs">
-    <rect class="nbox" x="${FS.x}" y="${FS.y}" width="${FS.w}" height="${FS.h}" rx="12"/>
-    <text class="ntitle" x="${FS.x + 12}" y="${FS.y + 26}">Rolling window</text>
-    <text class="nsub" x="${FS.x + 12}" y="${FS.y + 42}">slopes · EWMA · shock idx</text>
-    <text class="nval" id="fs_sofa" x="${FS.x + 12}" y="${FS.y + 68}" style="font-size:12px">SOFA —</text>
-    <text class="nval" id="fs_shock" x="${FS.x + 12}" y="${FS.y + 86}" style="font-size:12px">shock —</text>
-    <text class="nval" id="fs_slope" x="${FS.x + 12}" y="${FS.y + 104}" style="font-size:11px;fill:#8a98ad">rr/hr slope —</text>
+  // merged pipeline node (trust API + rolling window)
+  html += `<g class="cnode pipeline" id="node_pipeline">
+    <rect class="nbox" x="${PIPE.x}" y="${PIPE.y}" width="${PIPE.w}" height="${PIPE.h}" rx="14"/>
+    <!-- inner trust section -->
+    <rect x="${PIPE.x + 8}" y="${PIPE.y + 8}" width="100" height="${PIPE.h - 16}" rx="10" fill="rgba(15,36,24,.5)" stroke="#1f4d33" stroke-width="1"/>
+    <circle cx="${PIPE.x + 58}" cy="${PIPE.y + 34}" r="14" fill="rgba(61,220,132,.10)" stroke="var(--green)" stroke-width="1.5"/>
+    <path d="M${PIPE.x + 53},${PIPE.y + 34} l3,4 l7,-8" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="${PIPE.x + 58}" y="${PIPE.y + 68}" text-anchor="middle" style="font-size:9.5px;font-weight:800;fill:var(--green);letter-spacing:.06em">TRUST API</text>
+    <rect x="${PIPE.x + 18}" y="${PIPE.y + 82}" width="80" height="20" rx="10" fill="rgba(61,220,132,.08)" stroke="var(--green)" stroke-width="1" stroke-opacity=".5"/>
+    <text id="gov_grade" x="${PIPE.x + 58}" y="${PIPE.y + 96}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:var(--green)">—</text>
+    <text class="nval" id="gov_conf" x="${PIPE.x + 58}" y="${PIPE.y + 126}" text-anchor="middle" style="font-size:26px;font-weight:800;fill:var(--green);font-family:'JetBrains Mono',monospace">—</text>
+    <text x="${PIPE.x + 84}" y="${PIPE.y + 126}" text-anchor="middle" style="font-size:11px;font-weight:600;fill:var(--green);opacity:.7">%</text>
+    <rect class="gauge-bg" x="${PIPE.x + 18}" y="${PIPE.y + 142}" width="80" height="6" rx="3"/>
+    <rect class="gauge-fg" id="gov_gauge" x="${PIPE.x + 18}" y="${PIPE.y + 142}" width="0" height="6" rx="3" fill="var(--green)"/>
+    <!-- divider -->
+    <line x1="${PIPE.x + 116}" y1="${PIPE.y + 8}" x2="${PIPE.x + 116}" y2="${PIPE.y + 152}" stroke="#2a4a6a" stroke-width="1" stroke-dasharray="4 4" opacity="0.5"/>
+    <!-- rolling window section -->
+    <text x="${PIPE.x + 126}" y="${PIPE.y + 26}" style="font-size:14px;font-weight:700;fill:var(--ink)">Rolling window</text>
+    <text x="${PIPE.x + 126}" y="${PIPE.y + 42}" style="font-size:10.5px;fill:var(--muted)">slopes · EWMA · shock idx</text>
+    <text class="nval" id="fs_sofa" x="${PIPE.x + 126}" y="${PIPE.y + 68}" style="font-size:11px">SOFA —</text>
+    <text class="nval" id="fs_shock" x="${PIPE.x + 126}" y="${PIPE.y + 88}" style="font-size:11px">shock —</text>
+    <text class="nval" id="fs_slope" x="${PIPE.x + 126}" y="${PIPE.y + 108}" style="font-size:10px;fill:#8a98ad">slope —</text>
   </g>`;
 
   // agent nodes
@@ -223,20 +225,17 @@ function buildCouncilSVG() {
     <text class="nsub" x="${ALT.cx}" y="${ALT.cy + 28}" text-anchor="middle" id="alert_cons">consensus —</text>
   </g>`;
 
-  // edges: devices -> governance -> feature store
+  // edges: devices -> pipeline
   DEV.forEach((d, i) => {
-    const ymid = [200, 230, 260][i];
-    html += `<path class="edge flow" d="${path(d.x + d.w, d.y + d.h / 2, GOV.x, ymid, 10)}" marker-end="url(#arrow)"/>`;
+    const ymid = [192, 236, 280][i];
+    html += `<path class="edge flow" d="${path(d.x + d.w, d.y + d.h / 2, PIPE.x, ymid, 10)}" marker-end="url(#arrow)"/>`;
   });
-  // edge: governance -> feature store
-  html += `<path class="edge flow" d="${path(GOV.x + GOV.w, GOV.cy, FS.x, FS.cy, 10)}" marker-end="url(#arrow)"/>`;
-  html += `<circle r="3" class="packet gov-pkt"><animateMotion dur="1.6s" repeatCount="indefinite" begin="0.1s" path="${path(GOV.x + GOV.w, GOV.cy, FS.x, FS.cy, 10)}"/></circle>`;
-  // edges: feature store -> agents (fan-out) + packets
+  // edges: pipeline -> agents (fan-out) + packets
   AG.forEach((a, i) => {
     const cy = a.y + AG_H / 2;
-    const pid = `p_fs_${a.key}`;
-    html += `<path id="${pid}" class="edge flow" d="${path(FS.x + FS.w, FS.cy, AG_X, cy, 60)}" marker-end="url(#arrow)"/>`;
-    html += `<circle r="3.5" class="packet"><animateMotion dur="1.5s" repeatCount="indefinite" begin="${(i * 0.35).toFixed(2)}s" path="${path(FS.x + FS.w, FS.cy, AG_X, cy, 60)}"/></circle>`;
+    const pid = `p_pipe_${a.key}`;
+    html += `<path id="${pid}" class="edge flow" d="${path(PIPE.x + PIPE.w, PIPE.cy, AG_X, cy, 40)}" marker-end="url(#arrow)"/>`;
+    html += `<circle r="3.5" class="packet"><animateMotion dur="1.5s" repeatCount="indefinite" begin="${(i * 0.35).toFixed(2)}s" path="${path(PIPE.x + PIPE.w, PIPE.cy, AG_X, cy, 40)}"/></circle>`;
   });
   // edges: agents -> orchestrator (merge)
   AG.forEach((a) => {
@@ -306,27 +305,27 @@ function updateCouncil(p) {
   $("#dev_poct_v").textContent = `Lact ${labs.lactate ?? "—"} · WBC ${labs.wbc ?? "—"} · Cr ${labs.creatinine ?? "—"}`;
   $("#dev_notes_v").textContent = p.notes && p.notes.length ? `${p.notes.length} note${p.notes.length > 1 ? "s" : ""} · NER` : "no notes yet";
 
-  // governance (trust gate)
+  // governance (trust API)
   const t = p.data_trust || {};
   const g = t.data_trust_grade || "—";
   const c = t.data_confidence ?? 0;
-  $("#gov_grade").textContent = `grade ${g}`;
-  $("#gov_conf").textContent = `${(c * 100).toFixed(0)}%`;
+  $("#gov_grade").textContent = g;
+  $("#gov_conf").textContent = `${(c * 100).toFixed(0)}`;
   const govGauge = document.getElementById("gov_gauge");
   if (govGauge) {
-    const gw = Math.max(0, Math.min(100, c * 100)) / 100 * 46; // 62 - 16
+    const gw = Math.max(0, Math.min(100, c * 100)) / 100 * 80;
     govGauge.setAttribute("width", gw);
     const gcol = c >= 0.85 ? "var(--green)" : c >= 0.6 ? "var(--yellow)" : "var(--red)";
     govGauge.setAttribute("fill", gcol);
   }
-  const govNode = document.getElementById("node_gov");
-  if (govNode) govNode.classList.toggle("active", p.connected && c < 0.85);
+  const pipeNode = document.getElementById("node_pipeline");
+  if (pipeNode) pipeNode.classList.toggle("active", p.connected && c < 0.85);
 
   // feature store
   $("#fs_sofa").textContent = `SOFA ${fmt(p.sofa_score)} · Δ ${fmt(p.delta_sofa, 1)}`;
   $("#fs_shock").textContent = `shock idx ${fmt(p.shock_index, 2)}`;
   const f = p.features || {};
-  $("#fs_slope").textContent = `rr slope ${fmt(f.rr_slope, 2)} · hr slope ${fmt(f.hr_slope, 2)}`;
+  $("#fs_slope").textContent = `rr ${fmt(f.rr_slope, 2)} · hr ${fmt(f.hr_slope, 2)}`;
 
   // agents
   AGENT_ORDER.forEach((key) => {
