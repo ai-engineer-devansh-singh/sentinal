@@ -1,0 +1,48 @@
+# SENTINEL — files excluded from the Docker build context.
+# Mirrors .gitignore with a few additions for build hygiene.
+
+# VCS / IDE noise
+.git/
+.gitignore
+.gitattributes
+.idea/
+.vscode/
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Local config & secrets
+.env
+*.env.local
+
+# Audit trail / runtime state (regenerated inside the container)
+audit_trail.jsonl
+
+# Test / build artifacts
+dist/
+build/
+*.egg-info/
+.coverage
+htmlcov/
+
+# Docs (not needed in the image)
+*.pdf
+*.md
+!README.md
+!TECH_STACK.md
+
+# Docker files themselves (avoid recursive context)
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml

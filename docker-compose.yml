@@ -1,0 +1,47 @@
+# SENTINEL — convenience compose file.
+#
+# Usage (from this directory, i.e. sentinel/):
+#   docker compose up --build         # build image & start on :8000
+#   docker compose down               # stop & remove
+#
+# To pass an xAI Grok key, either:
+#   1. Create sentinel/.env (copy from .env.example, set XAI_API_KEY); or
+#   2. Run:  XAI_API_KEY=sk-... docker compose up --build
+#
+# The audit trail + dashboard cache are persisted on a named volume so
+# `docker compose down` doesn't wipe them.
+
+services:
+  sentinel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sentinel:latest
+    container_name: sentinel
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DEMO_HOST: "0.0.0.0"
+      DEMO_PORT: "8000"
+      DEMO_SPEED: "${DEMO_SPEED:-1.0}"
+      DEMO_AUTOCONNECT: "${DEMO_AUTOCONNECT:-1}"
+      XAI_API_KEY: "${XAI_API_KEY:-}"
+      XAI_BASE_URL: "${XAI_BASE_URL:-https://api.x.ai/v1}"
+      XAI_MODEL: "${XAI_MODEL:-grok-4-fast}"
+      XAI_MODEL_LARGE: "${XAI_MODEL_LARGE:-grok-4}"
+    env_file:
+      - path: ./.env
+        required: false
+    volumes:
+      - sentinel-data:/app/sentinel
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  sentinel-data:
+    name: sentinel-data
