@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SENTINEL — Multi-Agent Sepsis Detection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="/static/chart.umd.min.js"></script>
+<link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">S<span class="logo-dot"></span></div>
+    <div class="brand-text">
+      <h1>SENTINEL<span class="tm">™</span></h1>
+      <p>Multi-agent sepsis detection · deliberative AI council</p>
+    </div>
+  </div>
+  <div class="status-cluster" id="statusCluster">
+    <span class="chip" id="aiChip">AI: …</span>
+    <span class="chip" id="wsChip">WS: …</span>
+    <span class="chip" id="carbonChip">CO₂: 0.00 g</span>
+  </div>
+  <div class="controls">
+    <button class="btn ghost" id="connectAll">Connect all patches</button>
+    <div class="seg" id="speedSeg">
+      <button data-speed="0.5">0.5×</button>
+      <button data-speed="1" class="active">1×</button>
+      <button data-speed="2">2×</button>
+      <button data-speed="4">4×</button>
+    </div>
+    <button class="btn ghost" id="pauseBtn">Pause</button>
+  </div>
+</header>
+
+<main>
+  <!-- ── live plain-language summary ─────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-left">
+      <h2>From device to decision in minutes.</h2>
+      <p class="lede">A wearable patch streams vitals → four specialist agents deliberate → an explainable, tiered alert reaches the clinician. Every value below is streamed live and reasoned over by the agent council. <span class="hl" id="heroSummary">watching 0 patients…</span></p>
+    </div>
+    <div class="hero-right">
+      <div class="metric"><span class="metric-val" id="mPatients">0</span><span class="metric-lbl">patients streaming</span></div>
+      <div class="metric metric-red"><span class="metric-val" id="mRed">0</span><span class="metric-lbl">act now</span></div>
+      <div class="metric metric-yellow"><span class="metric-val" id="mYellow">0</span><span class="metric-lbl">needs review</span></div>
+      <div class="metric"><span class="metric-val" id="mAvgTTA">—</span><span class="metric-lbl">avg time-to-alert</span></div>
+    </div>
+  </section>
+
+  <!-- ── agent council live flow diagram (the centrepiece) ───────────────── -->
+  <section class="council-section">
+    <div class="section-head">
+      <div>
+        <h2>How the AI council is deciding right now</h2>
+        <p class="muted hint">Live data flow for <select id="councilSelect" class="inline-select"></select> · device → feature store → 4 agents → deliberation → alert</p>
+      </div>
+      <span class="legend">
+        <span class="lg lg-in">data in</span>
+        <span class="lg lg-agent">agents</span>
+        <span class="lg lg-orch">orchestrator</span>
+        <span class="lg lg-alert">alert</span>
+      </span>
+    </div>
+    <div class="council-wrap">
+      <svg id="councilSvg" viewBox="0 0 1040 470" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Agent council data flow"></svg>
+    </div>
+    <div class="council-feed">
+      <div class="feed-col">
+        <h4>Stage 1 · independent assessment</h4>
+        <div id="stage1Feed" class="feed-list"></div>
+      </div>
+      <div class="feed-col">
+        <h4>Stage 2 · cross-examination <span class="engine-pill" id="feedEngine">local</span></h4>
+        <div id="stage2Feed" class="feed-list"></div>
+      </div>
+      <div class="feed-col feed-verdict">
+        <h4>Stage 3 · synthesis</h4>
+        <div id="stage3Feed" class="feed-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── glanceable patient grid ─────────────────────────────────────────── -->
+  <section class="grid-section">
+    <div class="section-head"><h2>Patients</h2><p class="muted hint">click a patient for the full reasoning, charts &amp; response controls</p></div>
+    <section class="grid" id="patientGrid"><!-- patient cards injected here --></section>
+  </section>
+
+  <!-- ── system performance / validation ─────────────────────────────────── -->
+  <section class="metrics-section">
+    <div class="section-head">
+      <h2>System performance — synthetic validation cohort</h2>
+      <button class="btn ghost" id="refreshMetrics">Re-run batch</button>
+    </div>
+    <p class="muted hint" id="metricsHint">Computing batch metrics… (runs ~120 patients through the full pipeline)</p>
+    <div class="kpi-grid" id="kpiGrid"></div>
+    <div class="metrics-panels">
+      <div class="panel"><h3>Outcomes — with vs without SENTINEL</h3><div class="chart-wrap small"><canvas id="outcomesChart"></canvas></div><p class="muted hint" id="outcomesNote"></p></div>
+      <div class="panel"><h3>Equity &amp; bias — AUROC by subgroup</h3><div id="equityTable"></div><p class="muted hint" id="equityNote"></p></div>
+      <div class="panel"><h3>Drift detection — SPC chart (checkpoint 3)</h3><div class="chart-wrap small"><canvas id="driftChart"></canvas></div><p class="muted hint" id="driftNote"></p></div>
+    </div>
+  </section>
+</main>
+
+<!-- detail drawer -->
+<aside class="drawer" id="drawer" hidden>
+  <div class="drawer-head">
+    <div>
+      <h2 id="dName">Patient</h2>
+      <p id="dMeta" class="muted"></p>
+    </div>
+    <button class="btn ghost" id="dClose">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+<div class="scrim" id="scrim" hidden></div>
+
+<!-- governance panel -->
+<section class="governance">
+  <h3>Governance &amp; Audit Trail</h3>
+  <div class="audit-grid">
+    <div id="auditList" class="audit-list"></div>
+    <div class="modelcard" id="modelCard"></div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>SENTINEL Protocol · Erasmus Toulouse 2026 · Demo build</span>
+  <span id="footStamp"></span>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

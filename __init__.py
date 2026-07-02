@@ -1,0 +1,1 @@
+"""SENTINEL package — multi-agent sepsis detection system (Grok-powered)."""
