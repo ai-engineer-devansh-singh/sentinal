@@ -135,7 +135,7 @@ function buildCouncilSVG() {
     { key: "narrative", y: 342 },
   ];
   const AG_X = 486, AG_W = 196, AG_H = 92;
-  const PIPE = { x: 196, y: 156, w: 270, h: 160, cx: 331, cy: 236 };
+  const PIPE = { x: 277, y: 156, w: 108, h: 160, cx: 331, cy: 236 };
   const ORC = { x: 754, y: 160, w: 152, h: 140, cx: 830, cy: 230 };
   const ALT = { x: 944, y: 170, w: 100, h: 120, cx: 994, cy: 230 };
 
@@ -170,25 +170,17 @@ function buildCouncilSVG() {
   // merged pipeline node (trust API + rolling window)
   html += `<g class="cnode pipeline" id="node_pipeline">
     <rect class="nbox" x="${PIPE.x}" y="${PIPE.y}" width="${PIPE.w}" height="${PIPE.h}" rx="14"/>
-    <!-- inner trust section -->
-    <rect x="${PIPE.x + 8}" y="${PIPE.y + 8}" width="100" height="${PIPE.h - 16}" rx="10" fill="rgba(15,36,24,.5)" stroke="#1f4d33" stroke-width="1"/>
-    <circle cx="${PIPE.x + 58}" cy="${PIPE.y + 34}" r="14" fill="rgba(61,220,132,.10)" stroke="var(--green)" stroke-width="1.5"/>
-    <path d="M${PIPE.x + 53},${PIPE.y + 34} l3,4 l7,-8" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="${PIPE.x + 58}" y="${PIPE.y + 68}" text-anchor="middle" style="font-size:9.5px;font-weight:800;fill:var(--green);letter-spacing:.06em">TRUST API</text>
-    <rect x="${PIPE.x + 18}" y="${PIPE.y + 82}" width="80" height="20" rx="10" fill="rgba(61,220,132,.08)" stroke="var(--green)" stroke-width="1" stroke-opacity=".5"/>
-    <text id="gov_grade" x="${PIPE.x + 58}" y="${PIPE.y + 96}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:var(--green)">—</text>
-    <text class="nval" id="gov_conf" x="${PIPE.x + 58}" y="${PIPE.y + 126}" text-anchor="middle" style="font-size:26px;font-weight:800;fill:var(--green);font-family:'JetBrains Mono',monospace">—</text>
-    <text x="${PIPE.x + 84}" y="${PIPE.y + 126}" text-anchor="middle" style="font-size:11px;font-weight:600;fill:var(--green);opacity:.7">%</text>
-    <rect class="gauge-bg" x="${PIPE.x + 18}" y="${PIPE.y + 142}" width="80" height="6" rx="3"/>
-    <rect class="gauge-fg" id="gov_gauge" x="${PIPE.x + 18}" y="${PIPE.y + 142}" width="0" height="6" rx="3" fill="var(--green)"/>
-    <!-- divider -->
-    <line x1="${PIPE.x + 116}" y1="${PIPE.y + 8}" x2="${PIPE.x + 116}" y2="${PIPE.y + 152}" stroke="#2a4a6a" stroke-width="1" stroke-dasharray="4 4" opacity="0.5"/>
-    <!-- rolling window section -->
-    <text x="${PIPE.x + 126}" y="${PIPE.y + 26}" style="font-size:14px;font-weight:700;fill:var(--ink)">Rolling window</text>
-    <text x="${PIPE.x + 126}" y="${PIPE.y + 42}" style="font-size:10.5px;fill:var(--muted)">slopes · EWMA · shock idx</text>
-    <text class="nval" id="fs_sofa" x="${PIPE.x + 126}" y="${PIPE.y + 68}" style="font-size:11px">SOFA —</text>
-    <text class="nval" id="fs_shock" x="${PIPE.x + 126}" y="${PIPE.y + 88}" style="font-size:11px">shock —</text>
-    <text class="nval" id="fs_slope" x="${PIPE.x + 126}" y="${PIPE.y + 108}" style="font-size:10px;fill:#8a98ad">slope —</text>
+    <!-- single-column compact layout for 40% width -->
+    <text x="${PIPE.x + 54}" y="${PIPE.y + 16}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:var(--ink)">Rolling window</text>
+    <text x="${PIPE.x + 54}" y="${PIPE.y + 32}" text-anchor="middle" style="font-size:8px;font-weight:800;fill:var(--green);letter-spacing:.04em">TRUST API</text>
+    <text id="gov_grade" x="${PIPE.x + 54}" y="${PIPE.y + 46}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:var(--green)">—</text>
+    <text class="nval" id="gov_conf" x="${PIPE.x + 44}" y="${PIPE.y + 66}" text-anchor="middle" style="font-size:16px;font-weight:800;fill:var(--green);font-family:'JetBrains Mono',monospace">—</text>
+    <text x="${PIPE.x + 68}" y="${PIPE.y + 66}" text-anchor="middle" style="font-size:9px;font-weight:600;fill:var(--green);opacity:.7">%</text>
+    <text class="nval" id="fs_sofa" x="${PIPE.x + 54}" y="${PIPE.y + 90}" text-anchor="middle" style="font-size:9px">SOFA —</text>
+    <text class="nval" id="fs_shock" x="${PIPE.x + 54}" y="${PIPE.y + 106}" text-anchor="middle" style="font-size:9px">shock —</text>
+    <text class="nval" id="fs_slope" x="${PIPE.x + 54}" y="${PIPE.y + 122}" text-anchor="middle" style="font-size:8px;fill:#8a98ad">slope —</text>
+    <rect class="gauge-bg" x="${PIPE.x + 14}" y="${PIPE.y + 142}" width="80" height="4" rx="2"/>
+    <rect class="gauge-fg" id="gov_gauge" x="${PIPE.x + 14}" y="${PIPE.y + 142}" width="0" height="4" rx="2" fill="var(--green)"/>
   </g>`;
 
   // agent nodes
