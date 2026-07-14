@@ -201,3 +201,4 @@ exercised by unit tests and logged via the audit trail.
   demo run is identical and predictable.
 - No EHR/HL7 integration (the #1 technical risk in the brief) — this is the
   standalone demo build, not the hospital pilot.# sentinal
+# sentinal
