@@ -200,4 +200,4 @@ exercised by unit tests and logged via the audit trail.
 - Vitals are scripted + interpolated with reproducible noise (seed 42) so every
   demo run is identical and predictable.
 - No EHR/HL7 integration (the #1 technical risk in the brief) — this is the
-  standalone demo build, not the hospital pilot.
+  standalone demo build, not the hospital pilot.# sentinal
